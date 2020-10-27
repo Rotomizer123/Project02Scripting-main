@@ -72,10 +72,10 @@ public class FPSMotor : MonoBehaviour
             audioSource.clip = _fire;
             audioSource.Play();
             Destroy(audioObject, _fire.length);
-            if (Physics.Raycast(this.transform.Find("Main Camera").Find("Weapon").position, transform.Find("Main Camera").forward, out _hitInfo, 50f))
+            if (Physics.Raycast(this.transform.Find("Main Camera").position, transform.Find("Main Camera").forward, out _hitInfo, 50f))
             {
                 Vector3 endPoint = transform.Find("Main Camera").forward * 50f;
-                Debug.DrawRay(this.transform.Find("Main Camera").Find("Weapon").position, endPoint, Color.green, 1);
+                Debug.DrawRay(this.transform.Find("Main Camera").position, endPoint, Color.green, 1);
                 EnemyController enemyController = _hitInfo.transform.gameObject.GetComponent<EnemyController>();
                 _gunBlast.transform.position = _hitInfo.point;
                 Debug.Log(_hitInfo.normal);

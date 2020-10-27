@@ -13,6 +13,7 @@ public class Level01Controller : MonoBehaviour
     [SerializeField] Text _bestTimeTextView;
     [SerializeField] Text _currentTimeTextView1;
     [SerializeField] Text _currentTimeTextView2;
+    [SerializeField] Text _nearestEnemy;
 
     [Header("Panels")]
     [SerializeField] GameObject popupPanel;
@@ -54,6 +55,7 @@ public class Level01Controller : MonoBehaviour
         }
         _time += Time.deltaTime;
         _currentTimeTextView1.text = "Time: " + _time.ToString("F2");
+        NearestEnemy();
     }
 
     public void ExitLevel()
@@ -118,6 +120,7 @@ public class Level01Controller : MonoBehaviour
         }
         _currentScoreTextView1.gameObject.SetActive(false);
         _currentTimeTextView1.gameObject.SetActive(false);
+        _nearestEnemy.gameObject.SetActive(false);
         winPanel.SetActive(true);
         _winState = true;
         ApplyChangeToText();
@@ -131,11 +134,27 @@ public class Level01Controller : MonoBehaviour
         GameObject.Find("Canvas").transform.Find("YouDied_pnl").gameObject.SetActive(true);
     }
 
+    public void NearestEnemy()
+    {
+        Transform Player = GameObject.Find("FPSPlayer").transform;
+        Transform EnemyContainer = GameObject.Find("Enemies").transform;
+        float closestEnemyDistance = 0;
+
+        foreach (Transform Enemy in EnemyContainer)
+        {
+            float enemyDistance = Vector3.Distance(Player.position, Enemy.position);
+            if (enemyDistance < closestEnemyDistance || closestEnemyDistance == 0)
+            {
+                closestEnemyDistance = enemyDistance;
+            }
+        }
+        _nearestEnemy.text = "Nearest Enemy: " + (closestEnemyDistance / 2).ToString("F1");
+    }
 
     public void ApplyChangeToText()
     {
         _currentScoreTextView2.text = "Your Score: " + _currentScore.ToString();
-        _currentTimeTextView2.text = "Your time: " + _time.ToString("f2");
+        _currentTimeTextView2.text = "Your time: " + _time.ToString("F2");
         int highScore = PlayerPrefs.GetInt("HighScore");
         _highScoreTextView.text = "High Score: " + highScore.ToString();
         float bestTime = PlayerPrefs.GetFloat("BestTime");
